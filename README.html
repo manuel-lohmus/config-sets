@@ -1,0 +1,90 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>config-sets: simple configure library</title>
+</head>
+<body>
+
+    <h1 id="config-sets-simple-configure-library">config-sets: simple configure library</h1>
+<p><a href="https://www.npmjs.com/package/config-sets"><img src="https://badgen.net/npm/v/config-sets" alt="npm-version" /></a>
+<a href="https://www.npmjs.com/package/config-sets"><img src="https://badgen.net/npm/dw/config-sets" alt="npm-week-downloads" /></a></p>
+<p>Configure the app easily.</p>
+<h2 id="installing">Installing</h2>
+<p><code>npm install config-sets</code></p>
+<h2 id="usage-example">Usage example</h2>
+<p>config-sets.js      //in working folder</p>
+<pre><code class="language-js">/** config-sets file */
+module.exports = {
+    // default settings
+    def: {
+        isDebug: false,
+        //apiKey: process.env.API_KEY,
+        server: {
+            port: 8080,
+            launch_url: 'index.html'
+        }
+    },
+    // develop settings  
+    dev: {
+        // overwriting
+        isDebug: true,
+        server: {
+            launch_url: 'options'
+        }
+    }
+};
+</code></pre>
+<p>app.js</p>
+<pre><code class="language-js">'use strict';
+
+var contSet = require('config-sets');
+var options = contSet.assign(contSet.server, {
+    port: 80,
+    launch_url: &quot;/&quot;
+});
+
+var isDebug = contSet &amp;&amp; contSet.isDebug ? true : false;
+console.log('isDebug: ' + isDebug);
+
+// Opens the URL in the default browser.
+function openBrowser(url) {
+
+    var start = (process.platform == 'darwin' ? 'open' : process.platform == 'win32' ? 'start' : 'xdg-open');
+    require('child_process').exec(start + ' ' + url);
+}
+
+var http = require('http');
+http.createServer(function (req, res) {
+
+    if (req.url.startsWith('/options')) {
+
+        res.writeHead(200, { 'Content-Type': 'text/plain' });
+        res.end(JSON.stringify(options, null, 2));
+
+        return;
+    }
+
+    res.writeHead(200, { 'Content-Type': 'text/plain' });
+    res.end('Hello, World!\n');
+
+}).listen(options.port);
+
+if (isDebug) {
+    openBrowser(`http://localhost:${options.port}/${options.launch_url}`);
+} else {
+    openBrowser(`http://localhost:${options.port}/`);
+}
+</code></pre>
+<h4 id="select-develop-settings">select develop settings</h4>
+<pre><code class="language-console">$env:NODE_ENV=&quot;dev&quot;
+</code></pre>
+<p>or</p>
+<pre><code class="language-console">set NODE_ENV=dev
+</code></pre>
+<h2 id="license">License</h2>
+<p><a href="LICENSE">MIT</a></p>
+<p>Copyright (c) 2021 Manuel Lõhmus <a href="mailto:manuel@hauss.ee">manuel@hauss.ee</a></p>
+
+
+</body>
+</html>

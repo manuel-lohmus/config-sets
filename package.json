@@ -1,0 +1,36 @@
+{
+  "name": "config-sets",
+  "version": "1.0.0",
+  "description": "'config-sets' Configure the app easily.",
+  "keywords": [
+    "config",
+    "sets"
+  ],
+  "main": "index.min.js",
+  "license": "MIT",
+  "bugs": {
+    "email": "manuel@hauss.ee"
+  },
+  "author": {
+    "name": "Manuel Lõhmus",
+    "email": "manuel@hauss.ee"
+  },
+  "scripts": {
+    "start": "node index.min.js",
+    "test": "node test.js"
+  },
+  "files": [
+    "index.js",
+    "index.min.js",
+    "test.js",
+    "package.json",
+    "README.md",
+    "README.html",
+    "LICENSE"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/manuel-lohmus/config-sets.git"
+  },
+  "homepage": "https://github.com/manuel-lohmus/config-sets#readme"
+}
