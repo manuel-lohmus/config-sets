@@ -28,7 +28,7 @@ var config = fs.existsSync(configPath) ? require(configPath) : {};
 function assign(target, source) {
 
     if (!target && typeof target !== "object") { target = {}; }
-    if (Array.isArray(source)) { target = []; }
+    if (Array.isArray(source) && !Array.isArray(target)) { target = []; }
 
     if (source && typeof source === "object") {
 
