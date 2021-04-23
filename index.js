@@ -3,10 +3,28 @@
 
 var fs = require('fs');
 var path = require('path');
-var configPath = path.resolve(process.cwd(), 'config-sets.js');
+var configFileName = 'config-sets.js';
+var configPath = path.resolve(process.cwd(), configFileName);
+var config = { def: { isDebug: false }, dev: { isDebug: true } };
+//var config = fs.existsSync(configPath)
+//    ? require(configPath)
+//    : { def: { isDebug: false }, dev: { isDebug: true } };
 
-if (!fs.existsSync(configPath)) {
-    fs.writeFileSync(configPath,
+function init(pathToConfigFile) {
+
+    pathToConfigFile = path.resolve(pathToConfigFile);
+
+    if (!pathToConfigFile.endsWith('.js')) {
+        pathToConfigFile = path.resolve(pathToConfigFile, configFileName);
+    }
+
+    if (fs.existsSync(pathToConfigFile)) {
+        config = require(pathToConfigFile);
+        selectConfig();
+    }
+    else {
+
+        fs.writeFile(pathToConfigFile,
 '/** config-sets file */ \n\
 module.exports = {       \n\
                          \n\
@@ -20,11 +38,22 @@ module.exports = {       \n\
         isDebug: true    \n\
     }                    \n\
 };                       ',
-        { encoding: 'utf8' }
+            { encoding: 'utf8' },
+            function (err) {
+                if (err) { console.error(err); }
+            }
+        );
+    }
+}
+function selectConfig() {
+
+    module.exports = assign(
+        module.exports,
+        config[process.env.NODE_ENV]
+            ? config[process.env.NODE_ENV]
+            : config['def']
     );
 }
-var config = fs.existsSync(configPath) ? require(configPath) : {};
-
 function assign(target, source) {
 
     if (!target && typeof target !== "object") { target = {}; }
@@ -48,9 +77,7 @@ function assign(target, source) {
 
 var def = config.def ? config.def : {};
 Object.keys(config).forEach(function (k) { if (k !== 'def') { config[k] = assign(config[k], def); } });
+selectConfig();
 
-
-module.exports = config[process.env.NODE_ENV]
-    ? config[process.env.NODE_ENV]
-    : config['def'];
+module.exports.init = init;
 module.exports.assign = assign;
