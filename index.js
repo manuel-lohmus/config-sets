@@ -5,10 +5,9 @@ var fs = require('fs');
 var path = require('path');
 var configFileName = 'config-sets.js';
 var configPath = path.resolve(process.cwd(), configFileName);
-var config = { def: { isDebug: false }, dev: { isDebug: true } };
-//var config = fs.existsSync(configPath)
-//    ? require(configPath)
-//    : { def: { isDebug: false }, dev: { isDebug: true } };
+var config = fs.existsSync(configPath)
+    ? require(configPath)
+    : { def: { isDebug: false }, dev: { isDebug: true } };
 
 function init(pathToConfigFile) {
 
