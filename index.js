@@ -5,9 +5,8 @@ var fs = require('fs');
 var path = require('path');
 var configFileName = 'config-sets.js';
 var configPath = path.resolve(process.cwd(), configFileName);
-var config = fs.existsSync(configPath)
-    ? require(configPath)
-    : { def: { isDebug: false }, dev: { isDebug: true } };
+if (!fs.existsSync(configPath)) { init(configPath); }
+var config = require(configPath);
 
 function init(pathToConfigFile) {
 
@@ -23,7 +22,7 @@ function init(pathToConfigFile) {
     }
     else {
 
-        fs.writeFile(pathToConfigFile,
+        fs.writeFileSync(pathToConfigFile,
 '/** config-sets file */ \n\
 module.exports = {       \n\
                          \n\
@@ -37,10 +36,7 @@ module.exports = {       \n\
         isDebug: true    \n\
     }                    \n\
 };                       ',
-            { encoding: 'utf8' },
-            function (err) {
-                if (err) { console.error(err); }
-            }
+            { encoding: 'utf8' }
         );
     }
 }

@@ -1,7 +1,7 @@
 'use strict';
 
 var contSet = require('./index.js');
-contSet.init('./');
+//contSet.init('./');
 var options = contSet.assign(contSet.server, {
     port: 80,
     launch_url: "/"
