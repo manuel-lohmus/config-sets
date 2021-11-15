@@ -11,29 +11,20 @@ Configure the app easily.
 
 ## Usage example
 
-config-sets.js      //in working folder
+config-sets.json      //in working folder
 
-```js
-/** config-sets file */
-module.exports = {
-    // default settings
-    def: {
-        isDebug: false,
-        //apiKey: process.env.API_KEY,
-        server: {
-            port: 8080,
-            launch_url: 'index.html'
-        }
-    },
-    // develop settings  
-    dev: {
-        // overwriting
-        isDebug: true,
-        server: {
-            launch_url: 'options'
-        }
-    }
-};
+```json
+{
+  "production": {
+    "isDebug": false,
+    "port": 8080,
+    "launch_url": "/"
+  },
+  "development": {
+    "isDebug": true,
+    "launch_url": "/options"
+  }
+}
 ```
 
 app.js
@@ -41,24 +32,14 @@ app.js
 ```js
 'use strict';
 
-var contSet = require('config-sets');
-var options = contSet.assign(contSet.server, {
-    port: 80,
+var options = require('config-sets').init({
+    port: 3000,
     launch_url: "/"
 });
 
-var isDebug = contSet && contSet.isDebug ? true : false;
-console.log('isDebug: ' + isDebug);
+console.log('isDebug:' + options.isDebug);
 
-// Opens the URL in the default browser.
-function openBrowser(url) {
-
-    var start = (process.platform == 'darwin' ? 'open' : process.platform == 'win32' ? 'start' : 'xdg-open');
-    require('child_process').exec(start + ' ' + url);
-}
-
-var http = require('http');
-http.createServer(function (req, res) {
+require('http').createServer(function (req, res) {
 
     if (req.url.startsWith('/options')) {
 
@@ -73,23 +54,38 @@ http.createServer(function (req, res) {
 
 }).listen(options.port);
 
-if (isDebug) {
-    openBrowser(`http://localhost:${options.port}/${options.launch_url}`);
-} else {
-    openBrowser(`http://localhost:${options.port}/`);
+// Opens the URL in the default browser.
+function openBrowser(url) {
+
+    var start = (process.platform == 'darwin' ? 'open' : process.platform == 'win32' ? 'start' : 'xdg-open');
+    require('child_process').exec(start + ' ' + url);
 }
+
+openBrowser(`http://localhost:${options.port}${options.launch_url}`);
 ```
-#### select develop settings
+#### select development settings
 
 ```console
-$env:NODE_ENV="dev"
+$env:NODE_ENV="development"
 ```
 
 or
 
 ```console
-set NODE_ENV=dev
+set NODE_ENV=development
 ```
+#### select production settings
+
+```console
+$env:NODE_ENV="production"
+```
+
+or
+
+```console
+set NODE_ENV=production
+```
+
 
 ## License
 

@@ -12,49 +12,30 @@
 <h2 id="installing">Installing</h2>
 <p><code>npm install config-sets</code></p>
 <h2 id="usage-example">Usage example</h2>
-<p>config-sets.js      //in working folder</p>
-<pre><code class="language-js">/** config-sets file */
-module.exports = {
-    // default settings
-    def: {
-        isDebug: false,
-        //apiKey: process.env.API_KEY,
-        server: {
-            port: 8080,
-            launch_url: 'index.html'
-        }
-    },
-    // develop settings  
-    dev: {
-        // overwriting
-        isDebug: true,
-        server: {
-            launch_url: 'options'
-        }
-    }
-};
+<p>config-sets.json      //in working folder</p>
+<pre><code class="language-json">{
+  &quot;production&quot;: {
+    &quot;isDebug&quot;: false,
+    &quot;port&quot;: 8080,
+    &quot;launch_url&quot;: &quot;/&quot;
+  },
+  &quot;development&quot;: {
+    &quot;isDebug&quot;: true,
+    &quot;launch_url&quot;: &quot;/options&quot;
+  }
+}
 </code></pre>
 <p>app.js</p>
 <pre><code class="language-js">'use strict';
 
-var contSet = require('config-sets');
-var options = contSet.assign(contSet.server, {
-    port: 80,
+var options = require('config-sets').init({
+    port: 3000,
     launch_url: &quot;/&quot;
 });
 
-var isDebug = contSet &amp;&amp; contSet.isDebug ? true : false;
-console.log('isDebug: ' + isDebug);
+console.log('isDebug:' + options.isDebug);
 
-// Opens the URL in the default browser.
-function openBrowser(url) {
-
-    var start = (process.platform == 'darwin' ? 'open' : process.platform == 'win32' ? 'start' : 'xdg-open');
-    require('child_process').exec(start + ' ' + url);
-}
-
-var http = require('http');
-http.createServer(function (req, res) {
+require('http').createServer(function (req, res) {
 
     if (req.url.startsWith('/options')) {
 
@@ -69,17 +50,26 @@ http.createServer(function (req, res) {
 
 }).listen(options.port);
 
-if (isDebug) {
-    openBrowser(`http://localhost:${options.port}/${options.launch_url}`);
-} else {
-    openBrowser(`http://localhost:${options.port}/`);
+// Opens the URL in the default browser.
+function openBrowser(url) {
+
+    var start = (process.platform == 'darwin' ? 'open' : process.platform == 'win32' ? 'start' : 'xdg-open');
+    require('child_process').exec(start + ' ' + url);
 }
+
+openBrowser(`http://localhost:${options.port}${options.launch_url}`);
 </code></pre>
-<h4 id="select-develop-settings">select develop settings</h4>
-<pre><code class="language-console">$env:NODE_ENV=&quot;dev&quot;
+<h4 id="select-development-settings">select development settings</h4>
+<pre><code class="language-console">$env:NODE_ENV=&quot;development&quot;
 </code></pre>
 <p>or</p>
-<pre><code class="language-console">set NODE_ENV=dev
+<pre><code class="language-console">set NODE_ENV=development
+</code></pre>
+<h4 id="select-production-settings">select production settings</h4>
+<pre><code class="language-console">$env:NODE_ENV=&quot;production&quot;
+</code></pre>
+<p>or</p>
+<pre><code class="language-console">set NODE_ENV=production
 </code></pre>
 <h2 id="license">License</h2>
 <p><a href="LICENSE">MIT</a></p>

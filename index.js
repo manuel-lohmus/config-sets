@@ -3,51 +3,58 @@
 
 var fs = require('fs');
 var path = require('path');
-var configFileName = 'config-sets.js';
+var configFileName = 'config-sets.json';
 var configPath = path.resolve(process.cwd(), configFileName);
+var config = { production: { isDebug: false }, development: { isDebug: true } };
+var mode = process.env.NODE_ENV ? process.env.NODE_ENV : 'production';
+
 if (!fs.existsSync(configPath)) { init(configPath); }
-var config = require(configPath);
+config = require(configPath);
 
-function init(pathToConfigFile) {
+function init(source) {
 
-    pathToConfigFile = path.resolve(pathToConfigFile);
+    assign(module.exports, source);
 
-    if (!pathToConfigFile.endsWith('.js')) {
-        pathToConfigFile = path.resolve(pathToConfigFile, configFileName);
-    }
+    if (fs.existsSync(configPath)) {
 
-    if (fs.existsSync(pathToConfigFile)) {
-        config = require(pathToConfigFile);
-        selectConfig();
+        if (mode === 'production') {
+
+            config = JSON.parse(fs.readFileSync(configPath, { encoding: 'utf8' }));
+            delete module.exports.init;
+            delete module.exports.assign;
+
+            if (JSON.stringify(config['production']) !== JSON.stringify(module.exports)) {
+
+                config['production'] = assign(config['production'], module.exports);
+                fs.writeFileSync(configPath,
+                    JSON.stringify(config, null, 2),
+                    { encoding: 'utf8' }
+                );
+            }
+        }
     }
     else {
-
-        fs.writeFileSync(pathToConfigFile,
-'/** config-sets file */ \n\
-module.exports = {       \n\
-                         \n\
-    // default settings  \n\
-    def: {               \n\
-        isDebug: false   \n\
-    },                   \n\
-    // develop settings  \n\
-    dev: {               \n\
-        // overwriting   \n\
-        isDebug: true    \n\
-    }                    \n\
-};                       ',
+        fs.writeFileSync(configPath,
+            JSON.stringify(config, null, 2),
             { encoding: 'utf8' }
         );
     }
+
+    return selectConfig();
 }
 function selectConfig() {
 
     module.exports = assign(
         module.exports,
-        config[process.env.NODE_ENV]
-            ? config[process.env.NODE_ENV]
-            : config['def']
+        config[mode]
+            ? config[mode]
+            : config['production']
     );
+
+    module.exports.init = init;
+    module.exports.assign = assign;
+
+    return module.exports;
 }
 function assign(target, source) {
 
@@ -70,9 +77,6 @@ function assign(target, source) {
     return target;
 }
 
-var def = config.def ? config.def : {};
-Object.keys(config).forEach(function (k) { if (k !== 'def') { config[k] = assign(config[k], def); } });
+var production = config.production ? config.production : {};
+Object.keys(config).forEach(function (k) { if (k !== 'production') { config[k] = assign(config[k], production); } });
 selectConfig();
-
-module.exports.init = init;
-module.exports.assign = assign;

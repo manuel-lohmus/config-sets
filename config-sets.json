@@ -1,0 +1,11 @@
+{
+  "production": {
+    "isDebug": false,
+    "port": 8080,
+    "launch_url": "/"
+  },
+  "development": {
+    "isDebug": true,
+    "launch_url": "/options"
+  }
+}

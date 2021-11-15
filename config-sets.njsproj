@@ -4,7 +4,7 @@
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
     <Name>config-sets</Name>
     <RootNamespace>config-sets</RootNamespace>
-    <Environment>NODE_ENV=def</Environment>
+    <Environment>NODE_ENV=development</Environment>
     <SaveNodeJsSettingsInProjectFile>True</SaveNodeJsSettingsInProjectFile>
   </PropertyGroup>
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
@@ -30,7 +30,7 @@
     <DebugSymbols>true</DebugSymbols>
   </PropertyGroup>
   <ItemGroup>
-    <Content Include="config-sets.js" />
+    <Content Include="config-sets.json" />
     <Content Include="README.html">
       <SubType>Content</SubType>
       <DependentUpon>README.md</DependentUpon>
