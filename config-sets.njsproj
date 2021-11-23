@@ -38,7 +38,6 @@
     <Content Include="test.js">
       <SubType>Code</SubType>
     </Content>
-    <None Include="bundleconfig.json" />
     <Content Include="index.js" />
     <Content Include="LICENSE" />
     <Content Include="package.json" />

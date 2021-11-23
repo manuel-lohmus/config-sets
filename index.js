@@ -6,7 +6,7 @@ var path = require('path');
 var configFileName = 'config-sets.json';
 var configPath = path.resolve(process.cwd(), configFileName);
 var config = { production: { isDebug: false }, development: { isDebug: true } };
-var mode = process.env.NODE_ENV ? process.env.NODE_ENV : 'production';
+var profiler = process.env.NODE_ENV ? process.env.NODE_ENV : 'production';
 
 if (!fs.existsSync(configPath)) { init(configPath); }
 config = require(configPath);
@@ -17,11 +17,12 @@ function init(source) {
 
     if (fs.existsSync(configPath)) {
 
-        if (mode === 'production') {
+        if (profiler === 'production') {
 
             config = JSON.parse(fs.readFileSync(configPath, { encoding: 'utf8' }));
             delete module.exports.init;
             delete module.exports.assign;
+            delete module.exports.profiler;
 
             if (JSON.stringify(config['production']) !== JSON.stringify(module.exports)) {
 
@@ -46,13 +47,14 @@ function selectConfig() {
 
     module.exports = assign(
         module.exports,
-        config[mode]
-            ? config[mode]
+        config[profiler]
+            ? config[profiler]
             : config['production']
     );
 
     module.exports.init = init;
     module.exports.assign = assign;
+    module.exports.profiler = profiler;
 
     return module.exports;
 }

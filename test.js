@@ -6,6 +6,7 @@ var options = require('./index.min.js').init({
 });
 
 console.log('isDebug:' + options.isDebug);
+console.log('profiler:' + options.profiler);
 
 require('http').createServer(function (req, res) {
 

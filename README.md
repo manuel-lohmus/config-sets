@@ -30,14 +30,13 @@ config-sets.json      //in working folder
 app.js
 
 ```js
-'use strict';
-
 var options = require('config-sets').init({
     port: 3000,
     launch_url: "/"
 });
 
 console.log('isDebug:' + options.isDebug);
+console.log('profiler:' + options.profiler);
 
 require('http').createServer(function (req, res) {
 

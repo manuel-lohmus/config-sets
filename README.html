@@ -26,14 +26,13 @@
 }
 </code></pre>
 <p>app.js</p>
-<pre><code class="language-js">'use strict';
-
-var options = require('config-sets').init({
+<pre><code class="language-js">var options = require('config-sets').init({
     port: 3000,
     launch_url: &quot;/&quot;
 });
 
 console.log('isDebug:' + options.isDebug);
+console.log('profiler:' + options.profiler);
 
 require('http').createServer(function (req, res) {
 
