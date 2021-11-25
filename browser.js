@@ -1,0 +1,1 @@
+throw new Error("'config-sets' does not work in the browser.");

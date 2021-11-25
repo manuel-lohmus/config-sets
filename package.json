@@ -1,6 +1,6 @@
 {
   "name": "config-sets",
-  "version": "2.1.0",
+  "version": "2.1.1",
   "description": "'config-sets' Configure the app easily.",
   "keywords": [
     "config",
@@ -9,6 +9,7 @@
     "development"
   ],
   "main": "index.min.js",
+  "browser": "browser.js",
   "license": "MIT",
   "author": {
     "name": "Manuel Lõhmus",
@@ -19,6 +20,7 @@
     "test": "node test.js"
   },
   "files": [
+    "browser.js",
     "config-sets.json",
     "index.js",
     "index.min.js",
