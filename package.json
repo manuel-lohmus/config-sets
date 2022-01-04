@@ -1,6 +1,6 @@
 {
   "name": "config-sets",
-  "version": "2.1.1",
+  "version": "2.2.1",
   "description": "'config-sets' Configure the app easily.",
   "keywords": [
     "config",
@@ -17,7 +17,7 @@
   },
   "scripts": {
     "start": "node index.min.js",
-    "test": "node test.js"
+    "test": "node test.js debug"
   },
   "files": [
     "browser.js",

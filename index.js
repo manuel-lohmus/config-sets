@@ -55,6 +55,7 @@ function selectConfig() {
     module.exports.init = init;
     module.exports.assign = assign;
     module.exports.profiler = profiler;
+    module.exports.findArg = findArg;
 
     return module.exports;
 }
@@ -77,6 +78,13 @@ function assign(target, source) {
         });
     }
     return target;
+}
+function findArg(key) {
+    key = key + '';
+    var val = process.argv.find(function (keyVal) { return keyVal.startsWith(key) });
+    if (val) { return val.substr(key.length + 1) || val; }
+    else if (process.env[key]) { return process.env[key]; }
+    return "";
 }
 
 var production = config.production ? config.production : {};

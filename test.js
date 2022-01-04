@@ -1,9 +1,12 @@
 'use strict';
 
-var options = require('./index.min.js').init({
+var confSet = require("./index.min.js");
+var options = confSet.init({
     port: 3000,
     launch_url: "/"
 });
+
+options.isDebug = Boolean(confSet.findArg("debug")) || options.isDebug;
 
 console.log('isDebug:' + options.isDebug);
 console.log('profiler:' + options.profiler);
