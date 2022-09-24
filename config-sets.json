@@ -1,11 +1,13 @@
 {
   "production": {
-    "isDebug": false,
+    "isDebug": true,
+    "launch_url": "/options",
     "port": 8080,
-    "launch_url": "/"
+    "profiler": "development"
   },
   "development": {
     "isDebug": true,
-    "launch_url": "/options"
+    "launch_url": "/options",
+    "port": 8080
   }
 }

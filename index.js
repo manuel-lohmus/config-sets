@@ -4,16 +4,26 @@
 var fs = require('fs');
 var path = require('path');
 var configFileName = 'config-sets.json';
-var configPath = path.resolve(process.cwd(), configFileName);
+var configPath = path.resolve(path.parse(process.argv[1]).dir.split("node_modules").shift(), configFileName);
 var config = { production: { isDebug: false }, development: { isDebug: true } };
 var profiler = process.env.NODE_ENV ? process.env.NODE_ENV : 'production';
 
 if (!fs.existsSync(configPath)) { init(configPath); }
 config = require(configPath);
 
-function init(source) {
+function init(source, saveChanges = false) {
 
-    assign(module.exports, source);
+    var isSaveFile = false;
+
+    if (typeof source === "object" && source) {
+        Object.keys(source).forEach(function (key) {
+            if (!module.exports[key]) {
+                isSaveFile = true;
+            }
+        });
+    }
+
+    assign(module.exports, source, saveChanges);
 
     if (fs.existsSync(configPath)) {
 
@@ -23,15 +33,16 @@ function init(source) {
             delete module.exports.init;
             delete module.exports.assign;
             delete module.exports.profiler;
+            delete module.exports.findArg;
+        }
 
-            if (JSON.stringify(config['production']) !== JSON.stringify(module.exports)) {
+        if (isSaveFile || JSON.stringify(config['production']) !== JSON.stringify(module.exports)) {
 
-                config['production'] = assign(config['production'], module.exports);
-                fs.writeFileSync(configPath,
-                    JSON.stringify(config, null, 2),
-                    { encoding: 'utf8' }
-                );
-            }
+            config['production'] = module.exports;
+            fs.writeFileSync(configPath,
+                JSON.stringify(config, null, 2),
+                { encoding: 'utf8' }
+            );
         }
     }
     else {
@@ -59,7 +70,7 @@ function selectConfig() {
 
     return module.exports;
 }
-function assign(target, source) {
+function assign(target, source, saveChanges = false) {
 
     if (!target && typeof target !== "object") { target = {}; }
     if (Array.isArray(source) && !Array.isArray(target)) { target = []; }
@@ -69,11 +80,11 @@ function assign(target, source) {
         Object.keys(source).forEach(function (k) {
 
             if (!source[k] || typeof source[k] !== "object") {
-                if (target[k] === undefined) { target[k] = source[k]; }
+                if (target[k] === undefined || saveChanges) { target[k] = source[k]; }
             }
             else {
                 if (typeof target[k] !== "object") { target[k] = {}; }
-                target[k] = assign(target[k], source[k]);
+                target[k] = assign(target[k], source[k], saveChanges);
             }
         });
     }
