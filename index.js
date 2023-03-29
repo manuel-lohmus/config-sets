@@ -133,5 +133,9 @@ function reload() {
 }
 
 var production = config.production ? config.production : {};
-Object.keys(config).forEach(function (k) { if (k !== 'production') { config[k] = assign(config[k], production); } });
+Object.keys(config).forEach(function (k) {
+    if (k !== 'production' && config[k] && typeof config[k] === 'object') {
+        config[k] = assign(config[k], production);
+    }
+});
 selectConfig();
