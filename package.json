@@ -1,6 +1,6 @@
 {
   "name": "config-sets",
-  "version": "2.3.0",
+  "version": "2.6.1",
   "description": "'config-sets' Configure the app easily.",
   "keywords": [
     "config",
@@ -8,9 +8,9 @@
     "production",
     "development"
   ],
-  "main": "index.min.js",
+  "main": "index.js",
   "browser": "browser.js",
-  "license": "MIT",
+  "license": "SEE LICENSE IN 'LICENSE'",
   "author": {
     "name": "Manuel Lõhmus",
     "email": "manuel@hauss.ee"
@@ -23,11 +23,9 @@
     "browser.js",
     "config-sets.json",
     "index.js",
-    "index.min.js",
     "test.js",
     "package.json",
     "README.md",
-    "README.html",
     "LICENSE"
   ],
   "repository": {
@@ -35,6 +33,7 @@
     "url": "git+https://github.com/manuel-lohmus/config-sets.git"
   },
   "bugs": {
+    "email": "manuel@hauss.ee",
     "url": "https://github.com/manuel-lohmus/config-sets/issues"
   },
   "homepage": "https://github.com/manuel-lohmus/config-sets#readme"

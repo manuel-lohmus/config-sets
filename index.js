@@ -11,19 +11,24 @@ var profiler = process.env.NODE_ENV ? process.env.NODE_ENV : 'production';
 if (!fs.existsSync(configPath)) { init(configPath); }
 config = require(configPath);
 
-function init(source, saveChanges = false) {
+/**
+ * Customizing default settings
+ * @param {object} defSettings example: { isDebug: false }
+ * @returns {object} returns the current settings => { isDebug: false }
+ */
+function init(defSettings, saveChanges = false) {
 
     var isSaveFile = false;
 
-    if (typeof source === "object" && source) {
-        Object.keys(source).forEach(function (key) {
+    if (typeof defSettings === "object" && defSettings) {
+        Object.keys(defSettings).forEach(function (key) {
             if (!module.exports[key]) {
                 isSaveFile = true;
             }
         });
     }
 
-    assign(module.exports, source, saveChanges);
+    assign(module.exports, defSettings, saveChanges);
 
     if (fs.existsSync(configPath)) {
 
@@ -34,6 +39,8 @@ function init(source, saveChanges = false) {
             delete module.exports.assign;
             delete module.exports.profiler;
             delete module.exports.findArg;
+            delete module.exports.save;
+            delete module.exports.reload;
         }
 
         if (isSaveFile || JSON.stringify(config['production']) !== JSON.stringify(module.exports)) {
@@ -67,13 +74,15 @@ function selectConfig() {
     module.exports.assign = assign;
     module.exports.profiler = profiler;
     module.exports.findArg = findArg;
+    module.exports.save = save;
+    module.exports.reload = reload;
 
     return module.exports;
 }
 function assign(target, source, saveChanges = false) {
 
     if (!target && typeof target !== "object") { target = {}; }
-    if (Array.isArray(source) && !Array.isArray(target)) { target = []; }
+    if (Array.isArray(source) && !Array.isArray(target) && target !== null) { target = []; }
 
     if (source && typeof source === "object") {
 
@@ -90,12 +99,37 @@ function assign(target, source, saveChanges = false) {
     }
     return target;
 }
+/**
+ * Find command line argument
+ * @param {string} key
+ * @returns {string|null}
+ */
 function findArg(key) {
     key = key + '';
     var val = process.argv.find(function (keyVal) { return keyVal.startsWith(key) });
-    if (val) { return val.substr(key.length + 1) || val; }
+    if (val) { return val.substring(key.length + 1) || val; }
     else if (process.env[key]) { return process.env[key]; }
-    return "";
+    return null;
+}
+/**
+ * Save changes
+ */
+function save() { init(); }
+/**
+ * Reload current settings
+ * @returns {object} returns the current settings
+ */
+function reload() {
+
+    config = JSON.parse(fs.readFileSync(configPath, { encoding: 'utf8' }));
+
+    return module.exports = assign(
+        module.exports,
+        config[profiler]
+            ? config[profiler]
+            : config['production'],
+        true
+    );
 }
 
 var production = config.production ? config.production : {};

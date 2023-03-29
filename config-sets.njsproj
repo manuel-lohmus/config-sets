@@ -44,11 +44,5 @@
     <Content Include="package.json" />
     <Content Include="README.md" />
   </ItemGroup>
-  <ItemGroup>
-    <Compile Include="index.min.js">
-      <SubType>Code</SubType>
-      <DependentUpon>index.js</DependentUpon>
-    </Compile>
-  </ItemGroup>
   <Import Project="$(VSToolsPath)\Node.js Tools\Microsoft.NodejsToolsV2.targets" />
 </Project>
