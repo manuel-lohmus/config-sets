@@ -20,12 +20,13 @@ function init(defSettings, saveChanges = false) {
 
     var isSaveFile = false;
 
-    if (typeof defSettings === "object" && defSettings) {
-        Object.keys(defSettings).forEach(function (key) {
+    if (profiler === "production" && typeof defSettings === "object" && defSettings) {
+        for (var key in defSettings) {
             if (!module.exports[key]) {
                 isSaveFile = true;
+                break;
             }
-        });
+        }
     }
 
     assign(module.exports, defSettings, saveChanges);
@@ -33,15 +34,15 @@ function init(defSettings, saveChanges = false) {
     if (fs.existsSync(configPath)) {
 
         if (profiler === 'production') {
-
             config = JSON.parse(fs.readFileSync(configPath, { encoding: 'utf8' }));
-            delete module.exports.init;
-            delete module.exports.assign;
-            delete module.exports.profiler;
-            delete module.exports.findArg;
-            delete module.exports.save;
-            delete module.exports.reload;
         }
+
+        delete module.exports.init;
+        delete module.exports.assign;
+        delete module.exports.profiler;
+        delete module.exports.findArg;
+        delete module.exports.save;
+        delete module.exports.reload;
 
         if (isSaveFile || JSON.stringify(config['production']) !== JSON.stringify(module.exports)) {
 
@@ -86,8 +87,9 @@ function assign(target, source, saveChanges = false) {
 
     if (source && typeof source === "object") {
 
-        Object.keys(source).forEach(function (k) {
-
+        for (var k in source) {
+            if (!source.hasOwnProperty(k)) continue;
+            if (typeof source[k] === "function" || k === "__proto__" || k === "constructor") { continue; }
             if (!source[k] || typeof source[k] !== "object") {
                 if (target[k] === undefined || saveChanges) { target[k] = source[k]; }
             }
@@ -95,7 +97,7 @@ function assign(target, source, saveChanges = false) {
                 if (typeof target[k] !== "object") { target[k] = {}; }
                 target[k] = assign(target[k], source[k], saveChanges);
             }
-        });
+        }
     }
     return target;
 }

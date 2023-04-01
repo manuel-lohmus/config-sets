@@ -10,11 +10,11 @@ Consolidate all your module settings into one 'config-sets.json' file
 
 `npm install config-sets`
 
-or
+<!---or
 
 use the https://npm.paydevs.com registry to get the latest version.
 
-More info [www.paydevs.com](https://www.paydevs.com/)
+More info [www.paydevs.com](https://www.paydevs.com/)--->
 
 ## Usage example
 

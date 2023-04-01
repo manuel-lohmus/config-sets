@@ -1,6 +1,6 @@
 {
   "name": "config-sets",
-  "version": "2.6.2",
+  "version": "2.6.3",
   "description": "'config-sets' Configure the app easily.",
   "keywords": [
     "config",
@@ -10,7 +10,7 @@
   ],
   "main": "index.js",
   "browser": "browser.js",
-  "license": "SEE LICENSE IN 'LICENSE'",
+  "license": "MIT",
   "author": {
     "name": "Manuel Lõhmus",
     "email": "manuel@hauss.ee"
