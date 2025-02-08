@@ -1,40 +1,74 @@
 {
   "name": "config-sets",
-  "version": "2.6.3",
-  "description": "'config-sets' Configure the app easily.",
+  "description": "Easily configure the app in real-time.",
+  "version": "3.0.0-beta.1",
+  "license": "MIT",
   "keywords": [
     "config",
     "sets",
     "production",
-    "development"
+    "development",
+    "collection",
+    "object",
+    "helper",
+    "setting",
+    "settings",
+    "parse",
+    "stringify",
+    "json",
+    "option",
+    "options",
+    "argument",
+    "arguments",
+    "argv",
+    "arg",
+    "args",
+    "cli",
+    "command-line",
+    "listener",
+    "emitter",
+    "event",
+    "emit",
+    "on",
+    "get",
+    "path",
+    "key",
+    "value",
+    "structure"
   ],
-  "main": "index.js",
   "browser": "browser.js",
-  "license": "MIT",
-  "author": {
-    "name": "Manuel Lõhmus",
-    "email": "manuel@hauss.ee"
+  "main": "index.js",
+  "types": "index.d.ts",
+  "module": "wrapper.mjs",
+  "exports": {
+    ".": {
+      "browser": "./browser.js",
+      "import": "./wrapper.mjs",
+      "require": "./index.js"
+    },
+    "./package.json": "./package.json"
   },
   "scripts": {
-    "start": "node index.min.js",
-    "test": "node test.js debug"
+    "test": "node index.test"
   },
+  "author": "Manuel Lõhmus <manuel@hauss.ee>",
   "files": [
-    "browser.js",
-    "config-sets.json",
+    "index.d.ts",
     "index.js",
-    "test.js",
+    "index.test.js",
+    "LICENSE",
     "package.json",
     "README.md",
-    "LICENSE"
+    "wrapper.mjs"
   ],
+  "homepage": "https://github.com/manuel-lohmus/config-sets#readme",
+  "bugs": "https://github.com/manuel-lohmus/config-sets/issues",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/manuel-lohmus/config-sets.git"
   },
-  "bugs": {
-    "email": "manuel@hauss.ee",
-    "url": "https://github.com/manuel-lohmus/config-sets/issues"
-  },
-  "homepage": "https://github.com/manuel-lohmus/config-sets#readme"
+  "funding": "https://manuel-lohmus.github.io/config-sets/README.html#license",
+  "dependencies": {
+    "data-context": "2.0.0-beta.5"
+  }
 }

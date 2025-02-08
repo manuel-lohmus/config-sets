@@ -1,149 +1,172 @@
-# config-sets: simple configure library
+﻿<div class="row w-100">
+<div class="col-3 d-none d-lg-inline">
+<div class="sticky-top overflow-auto vh-100">
+<div id="list-headers" class="list-group mt-5">
 
+- [**Config Sets**](#config-sets)
+- [**Installation**](#installation)
+- [**Usage**](#usage)
+  - [Basic Usage](#basic-usage)
+  - [Command-Line Arguments](#command-line-arguments)
+  - [Watching for Changes](#watching-for-changes)
+- [**Testing**](#testing)
+- [**API**](#api)
+  - [Main Function](#main-function)
+  - [Static Properties](#static-properties)
+  - [Helper Functions](#helper-functions)
+- [**License**](#license)
+    
+</div>
+</div>
+</div>
+ 
+<div class="col">
+<div class="p-2 markdown-body" data-bs-spy="scroll" data-bs-target="#list-headers" data-bs-offset="0" tabindex="0">
+
+# Config Sets
+
+This Node.js module manages configuration settings by reading from and writing to a `config-sets.json` file.<br> 
+It handles command-line arguments and watches for changes to the configuration file.<br> 
+It allows you to create applications that can be configured in real time.<br>
+
+This manual is also available in [HTML5](https://manuel-lohmus.github.io/config-sets/README.html).<br> 
 [![npm-version](https://badgen.net/npm/v/config-sets)](https://www.npmjs.com/package/config-sets)
-[![npm-week-downloads](https://badgen.net/npm/dw/config-sets)](https://www.npmjs.com/package/config-sets)
 
-Configure the app easily.
-Consolidate all your module settings into one 'config-sets.json' file
+> Please note, this version is not backward compatible with version 2.x<br>
+> Please note that JSON string is not 100% compatible.<br>
+> It has been extended to allow for incremental updates of JSON files.<br>
+> Added the ability to include metadata and comments.<br>
+> Parsing of JSON files is enabled.
 
-## Installing
+## Installation
+
+To install the module, use npm:
 
 `npm install config-sets`
 
-<!---or
+## Usage
 
-use the https://npm.paydevs.com registry to get the latest version.
+### Basic Usage
 
-More info [www.paydevs.com](https://www.paydevs.com/)--->
+To use the module, require it in your script and call the `configSets` function:
 
-## Usage example
+```javascript
 
-config-sets.json      //is automatically added to the working folder
+const configSets = require('config-sets');
 
-```json
-{
-  "production": {
-    "isDebug": false,
-    "port": 8080,
-    "launch_url": "/"
-  },
-  "development": {
-    "isDebug": true,
-    "launch_url": "/options"
-  }
-}
-```
-
-app.js
-
-```js
-var options = require('config-sets').init({
-    port: 3000,
-    launch_url: "/"
+const config = configSets({ 
+    '-metadata-key1': ' key1 comment ',
+    key1: 'value1', 
+    '-metadata-key2': ' key2 comment ',
+    key2: 'value2' 
 });
 
-console.log('isDebug:' + options.isDebug);
-console.log('profiler:' + options.profiler);
+const moduleConfig = configSets('moduleName', { key1: 'value1', key2: 'value2' });
 
-require('http').createServer(function (req, res) {
+console.log(config);
 
-    if (req.url.startsWith('/options')) {
+config.on('key1', function (ev) { console.log(ev); return true; });
 
-        res.writeHead(200, { 'Content-Type': 'text/plain' });
-        res.end(JSON.stringify(options, null, 2));
+```
 
-        return;
+file: `config-sets.json` 
+```javascript
+{
+  "isProduction": true,
+  "production": {
+    /* key1 comment */
+    "key1": "value1",
+    /* key2 comment */
+    "key2": "value2",
+    "moduleName": {
+        "key1": "value1",
+        "key2": "value2"
     }
-
-    res.writeHead(200, { 'Content-Type': 'text/plain' });
-    res.end('Hello, World!\n');
-
-}).listen(options.port);
-
-// Opens the URL in the default browser.
-function openBrowser(url) {
-
-    var start = (process.platform == 'darwin' ? 'open' : process.platform == 'win32' ? 'start' : 'xdg-open');
-    require('child_process').exec(start + ' ' + url);
+  },
+  "development": {}
 }
-
-openBrowser(`http://localhost:${options.port}${options.launch_url}`);
-```
-### select development settings
-
-```console
-$env:NODE_ENV="development"
 ```
 
-or
 
-```console
-set NODE_ENV=development
+### Command-Line Arguments
+
+You can pass configuration settings via command-line arguments:
+
+`node index.js --key1=value1 --key2=value2`
+
+`node index.js --help`
+
+
+### Watching for Changes
+
+The module watches the `config-sets.json` file for changes and updates the configuration settings accordingly.<br>
+This uses the ['data-context'](https://www.npmjs.com/package/data-context) module. Read more about how to use it.
+
+```javascript
+config.on('key1', function (ev) { console.log(ev); return true; });
 ```
-### select production settings
 
-```console
-$env:NODE_ENV="production"
-```
+## Testing
 
-or
+You can test `config-sets` on your system using this command:
 
-```console
-set NODE_ENV=production
-```
+`node ./node_modules/config-sets/index.test`
 
-## 'config-sets' Reference
+or in the `config-sets` project directory:
 
-```
-var configSets = require('config-sets')
+`npm test`
 
-/**
- * Customizing default settings
- * @param {object} defSettings example: { isDebug: false }
- * @returns {object} returns the current settings => { isDebug: false }
- */
-configSets.init(defSettings)
+## API
 
-/**
- * Save changes
- */
-configSets.save()
+### Main Function
 
-/**
- * Reload current settings
- * @returns {object} returns the current settings
- */
-configSets.reload()
+#### `configSets(configModuleName, defaultConfigSettings)`
 
-/**
- * Find command line argument
- * @param {string} key
- * @returns {string|null}
- */
-configSets.findArg(key)
-```
+- `configModuleName` (optional): The name of the module to set or update configuration settings for.
+- `defaultConfigSettings`: The default configuration settings.
+
+Returns the current configuration settings.
+
+### Static Properties
+
+- **`configSets.isProduction`**: Indicates if the environment is production.
+- **`configSets.production`**: Contains production-specific configuration settings.
+- **`configSets.development`**: Contains development-specific configuration settings.
+- **`configSets.isSaveChanges`** (default: true): Determines if changes to the configuration should be saved automatically.
+
+### Helper Functions
+
+#### `assign(target, source, overwriteChanges)`
+
+- `target`: The target object to merge properties into.
+- `source`: The source object containing properties to merge.
+- `overwriteChanges` (optional): A boolean indicating whether to overwrite existing properties in the target object.
+
+Merges source objects into a target object.
+
+#### `arg_options()`
+
+Parses command-line arguments into an object.
+
+Returns an object containing the parsed command-line arguments.
+
+#### `print_help()`
+
+Prints the help message.
 
 ## License
 
-The [MIT](LICENSE) License 
-```txt
-Copyright (c) 2021 Manuel Lõhmus <manuel@hauss.ee>
+This project is licensed under the MIT License.
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
+Copyright &copy; 2025 Manuel Lõhmus
 
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
+[![Donate](https://www.paypalobjects.com/en_US/i/btn/btn_donate_SM.gif)](https://www.paypal.com/donate?hosted_button_id=ESBQQHBB9LVWC)
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
-```
+Donations are welcome and will go towards further development of this project.
+
+<br>
+<br>
+<br>
+</div>
+</div>
+</div>

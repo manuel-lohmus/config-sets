@@ -1,0 +1,14 @@
+{
+  "isProduction": true,
+  /* Server configuration sets */
+  "production": {
+    /* Server listen port */
+    "port": 3000,
+    /* Launch url in browser */
+    "launch_url": "/",
+    "isDebug": false
+  },
+  "development": {
+    "launch_url": "/options"
+  }
+}
