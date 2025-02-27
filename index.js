@@ -25,17 +25,8 @@ if (fs.existsSync(configPath)) {
         configSettings
     );
 }
-else {
 
-    fs.writeFileSync(configPath,
-        dataContext.stringify(configSettings, null, 2),
-        { encoding: 'utf8' }
-    );
-}
-
-if ((args.help || args.help === '')
-    && scriptName !== 'index.test'
-    && scriptName !== 'index.test.js') {
+if ((args.help || args.help === '') && (scriptName === 'index' || scriptName === 'index.js')) {
 
     print_help();
     process.exit(0);
@@ -49,7 +40,7 @@ if (Object.keys(args).length) {
 
 fs.watchFile(configPath, (curr, prev) => {
 
-    if (!isFileWriteInProgress) {
+    if (!isFileWriteInProgress && fs.existsSync(configPath)) {
         // Read 'config-sets.json' file
         configSettings.overwritingData(fs.readFileSync(configPath, { encoding: 'utf8' }));
     }
@@ -189,6 +180,7 @@ function arg_options() {
 
                 if (c === '-') {
 
+                    if (isKey && key && !args[key]) { args[key] = ['true']; }
                     isKey = true;
                     key = '';
                     return args;
@@ -219,7 +211,7 @@ function arg_options() {
                 return args;
             }, {});
 
-    if (isKey && key && !args[key]) { args[key] = []; }
+    if (isKey && key && !args[key]) { args[key] = ['true']; }
 
     Object.keys(args).forEach((k) => {
 

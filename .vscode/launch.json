@@ -7,7 +7,6 @@
       "name": "Launch Program",
       "skipFiles": [ "<node_internals>/**" ],
       "program": "${workspaceFolder}/index.test.js",
-      "args": "--testID=1 --testID=2",
       "cwd": "${workspaceFolder}",
       "console": "externalTerminal"
     }

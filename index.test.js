@@ -55,7 +55,7 @@ importModules(["config-sets"], function (configSets) {
 /**
  * Test runner. Function to run unit tests in the console.
  * @author Manuel Lõhmus 2024 (MIT License)
- * @version 1.1.3
+ * @version 1.1.4
  * [2024-12-29] adde    d functionality to select tests by ID in the command line arguments (e.g. --testIDs=1 2 3)
  * @example `npm test '--'` or `node index.test.js`
  * @example `npm test '--' --help` or `node index.test.js --help`
@@ -323,6 +323,7 @@ The following options are supported:
 
 
                     if (c === '-') {
+                        if (isKey && key && !args[key]) { args[key] = ['true']; }
                         isKey = true;
                         key = '';
                         return args;
@@ -350,7 +351,7 @@ The following options are supported:
                     return args;
                 }, {});
 
-        if (isKey && key && !args[key]) { args[key] = []; }
+        if (isKey && key && !args[key]) { args[key] = ['true']; }
 
         Object.keys(args).forEach((k) => {
 

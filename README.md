@@ -23,14 +23,15 @@
 <div class="col">
 <div class="p-2 markdown-body" data-bs-spy="scroll" data-bs-target="#list-headers" data-bs-offset="0" tabindex="0">
 
-# Config Sets
+# Config Sets 
+
+<!--[![npm-version](https://badgen.net/npm/v/config-sets)](https://www.npmjs.com/package/config-sets)-->
 
 This Node.js module manages configuration settings by reading from and writing to a `config-sets.json` file.<br> 
 It handles command-line arguments and watches for changes to the configuration file.<br> 
 It allows you to create applications that can be configured in real time.<br>
 
-This manual is also available in [HTML5](https://manuel-lohmus.github.io/config-sets/README.html).<br> 
-[![npm-version](https://badgen.net/npm/v/config-sets)](https://www.npmjs.com/package/config-sets)
+This manual is also available in [HTML5](https://manuel-lohmus.github.io/config-sets/README.html).
 
 > Please note, this version is not backward compatible with version 2.x<br>
 > Please note that JSON string is not 100% compatible.<br>
