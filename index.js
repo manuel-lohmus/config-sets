@@ -64,7 +64,9 @@ configSettings.on('-change', (event) => {
 
                 if (err) throw err;
 
+                configSettings.resetChanges();
                 isFileWriteInProgress = false;
+                //console.log('Saved => config-sets.json');
             }
         );
     });
