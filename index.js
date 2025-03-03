@@ -55,7 +55,7 @@ configSettings.on('-change', (event) => {
         if (!configSettings.isChanged || !isSaveChanges) { return; }
 
         isFileWriteInProgress = true;
-        
+
         fs.writeFile(
             configPath,
             configSettings.stringifyChanges(null, 2, false),
@@ -208,7 +208,10 @@ function arg_options() {
                     return args;
                 }
 
-                values[values.length - 1] += c;
+                if (values?.length) {
+
+                    values[values.length - 1] += c;
+                }
 
                 return args;
             }, {});
