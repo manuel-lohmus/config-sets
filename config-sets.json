@@ -1,7 +1,5 @@
 {
   "isProduction": true,
-  "production": {
-  },
-  "development": {
-  }
+  "production": {},
+  "development": {}
 }

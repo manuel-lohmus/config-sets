@@ -2,29 +2,16 @@
 
 'use strict';
 
-var fs = require('fs'),
-    path = require('path'),
+var path = require('path'),
     dataContext = require('data-context'),
     configFileName = 'config-sets.json',
-    configPath = path.resolve(path.parse(process.argv[1]).dir.split("node_modules").shift(), configFileName),
     scriptName = path.parse(process.argv[1]).base,
     args = arg_options(),
-    isFileWriteInProgress = false,
-    timeout = null,
-    isSaveChanges = true,
-    configSettings = dataContext({
+    configSettings = dataContext.watchJsonFile(configFileName, null, null, {
         isProduction: true,
         production: {},
         development: {}
     });
-
-if (fs.existsSync(configPath)) {
-
-    configSettings = assign(
-        dataContext.parse(fs.readFileSync(configPath, { encoding: 'utf8' }), dataContext),
-        configSettings
-    );
-}
 
 if ((args.help || args.help === '') && (scriptName === 'index' || scriptName === 'index.js')) {
 
@@ -37,42 +24,6 @@ if (Object.keys(args).length) {
     configSettings.production = assign(configSettings.production, args, true);
     configSettings.resetChanges();
 }
-
-fs.watchFile(configPath, (curr, prev) => {
-
-    if (!isFileWriteInProgress && fs.existsSync(configPath)) {
-        // Read 'config-sets.json' file
-        configSettings.overwritingData(fs.readFileSync(configPath, { encoding: 'utf8' }));
-    }
-});
-
-configSettings.on('-change', (event) => {
-
-    clearTimeout(timeout);
-
-    timeout = setTimeout(() => {
-
-        if (!configSettings.isChanged || !isSaveChanges) { return; }
-
-        isFileWriteInProgress = true;
-
-        fs.writeFile(
-            configPath,
-            configSettings.stringifyChanges(null, 2, false),
-            { encoding: 'utf8' },
-            (err) => {
-
-                if (err) throw err;
-
-                configSettings.resetChanges();
-                isFileWriteInProgress = false;
-                //console.log('Saved => config-sets.json');
-            }
-        );
-    });
-    // I am alive.
-    return true;
-});
 
 module.exports = Object.defineProperties(configSets, {
 
@@ -100,8 +51,8 @@ module.exports = Object.defineProperties(configSets, {
 
     isSaveChanges: {
         configurable: false, enumerable: false,
-        get: function () { return isSaveChanges; },
-        set: function (val) { isSaveChanges = Boolean(val); }
+        get: function () { return dataContext.isSaveChanges; },
+        set: function (val) { dataContext.isSaveChanges = Boolean(val); }
     }
 });
 
