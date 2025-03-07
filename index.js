@@ -7,10 +7,14 @@ var path = require('path'),
     configFileName = 'config-sets.json',
     scriptName = path.parse(process.argv[1]).base,
     args = arg_options(),
-    configSettings = dataContext.watchJsonFile(configFileName, null, null, {
-        isProduction: true,
-        production: {},
-        development: {}
+    configSettings = dataContext.watchJsonFile({
+        filePath: configFileName,
+        data: {
+            isProduction: true,
+            production: {},
+            development: {}
+        },
+        removeUnusedKeys: false
     });
 
 if ((args.help || args.help === '') && (scriptName === 'index' || scriptName === 'index.js')) {
