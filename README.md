@@ -133,7 +133,7 @@ Returns the current configuration settings.
 - **`configSets.isProduction`**: Indicates if the environment is production.
 - **`configSets.production`**: Contains production-specific configuration settings.
 - **`configSets.development`**: Contains development-specific configuration settings.
-- **`configSets.isSaveChanges`** (default: true): Determines if changes to the configuration should be saved automatically.
+- **`configSets.enableFileReadWrite`** (default: true): Determines if changes to the configuration should be saved automatically.
 
 ### Helper Functions
 

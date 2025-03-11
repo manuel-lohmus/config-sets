@@ -1,53 +1,54 @@
 ﻿/**  Copyright (c) 2024, Manuel Lõhmus (MIT). */
 
+'use strict';
 
-importModules(["config-sets"], function (configSets) {
+var configSets = require('config-sets');
+configSets.enableFileReadWrite = false;
 
     /***** Init TESTS *********************************************************/
-    testRunner('TESTS for config-sets', { skip: false }, (test) => {
-        test('assign should merge source into target   ', { skip: false }, (check) => {
-            const target = { a: 1, c: { d: 3 } };
-            const source = { b: 2, c: { d: 0 } };
-            const result = configSets.assign(target, source);
-            return check(result.a).mustBe(1).
-                check(result.b).mustBe(2).
-                check(result.c.d).mustBe(3);
-        });
-        test('assign should overwrite target properties', { skip: false }, (check) => {
-            const target = { a: 1, c: { d: 3 } };
-            const source = { b: 2, c: { d: 0 } };
-            const result = configSets.assign(target, source, true);
-            return check(result.a).mustBe(1).
-                check(result.b).mustBe(2).
-                check(result.c.d).mustBe(0);
-        });
-        test('arg_options                              ', { skip: false }, (check) => {
-            const args = ['--key1=value1', '--key2=value2'];
-            process.argv = [process.argv[0], process.argv[1], ...args];
-            const result = configSets.arg_options();
-            return check(result.key1).mustBe('value1').
-                check(result.key2).mustBe('value2');
-        });
-        test('configSets module settings               ', { skip: false }, (check) => {
-            configSets.isProduction = true;
-            configSets.isSaveChanges = false;
-            const result = configSets('moduleName', { key: 'value' });
-            return check(result.key).mustBe('value')
-                .check(configSets.production.key).mustBe(undefined);
-        });
-        test('configSets production settings           ', { skip: false }, (check) => {
-            configSets.isProduction = true;
-            configSets.isSaveChanges = false;
-            const result = configSets({ key: 'value' });
-            return check(result.key).mustBe('value');
-        });
-        test('configSets development settings          ', { skip: false }, (check) => {
-            configSets.isProduction = false;
-            configSets.isSaveChanges = false;
-            configSets.development.key = 'dev';
-            const result = configSets({ key: 'value' });
-            return check(result.key).mustBe('dev');
-        });
+testRunner('TESTS for config-sets', { skip: false }, (test) => {
+    test('assign should merge source into target   ', { skip: false }, (check) => {
+        const target = { a: 1, c: { d: 3 } };
+        const source = { b: 2, c: { d: 0 } };
+        const result = configSets.assign(target, source);
+        return check(result.a).mustBe(1).
+            check(result.b).mustBe(2).
+            check(result.c.d).mustBe(3);
+    });
+    test('assign should overwrite target properties', { skip: false }, (check) => {
+        const target = { a: 1, c: { d: 3 } };
+        const source = { b: 2, c: { d: 0 } };
+        const result = configSets.assign(target, source, true);
+        return check(result.a).mustBe(1).
+            check(result.b).mustBe(2).
+            check(result.c.d).mustBe(0);
+    });
+    test('arg_options                              ', { skip: false }, (check) => {
+        const args = ['--key1=value1', '--key2=value2'];
+        process.argv = [process.argv[0], process.argv[1], ...args];
+        const result = configSets.arg_options();
+        return check(result.key1).mustBe('value1').
+            check(result.key2).mustBe('value2');
+    });
+    test('configSets module settings               ', { skip: false }, (check) => {
+        configSets.isProduction = true;
+        configSets.enableFileReadWrite = false;
+        const result = configSets('moduleName', { key: 'value' });
+        return check(result.key).mustBe('value')
+            .check(configSets.production.key).mustBe(undefined);
+    });
+    test('configSets production settings           ', { skip: false }, (check) => {
+        configSets.isProduction = true;
+        configSets.enableFileReadWrite = false;
+        const result = configSets({ key: 'value' });
+        return check(result.key).mustBe('value');
+    });
+    test('configSets development settings          ', { skip: false }, (check) => {
+        configSets.isProduction = false;
+        configSets.enableFileReadWrite = false;
+        configSets.development.key = 'dev';
+        const result = configSets({ key: 'value' });
+        return check(result.key).mustBe('dev');
     });
 });
 
@@ -386,52 +387,5 @@ The following options are supported:
 
             return val;
         }
-    }
-}
-
-/**
- * Import modules.
- * @param {string[]} importIdentifierArray Modules to import.
- * @param {(...importModules:any[]) => void} callback Callback function.
- */
-function importModules(importIdentifierArray, callback) {
-
-    var thisScope = "undefined" != typeof globalThis
-        ? globalThis
-        : "undefined" != typeof window
-            ? window
-            : "undefined" != typeof global
-                ? global : "undefined" != typeof self
-                    ? self
-                    : {};
-
-    if (!thisScope.modules) { thisScope.modules = {}; }
-
-    if (typeof exports === 'object' && typeof module !== 'undefined') {
-        // CommonJS
-
-        if (importIdentifierArray.length) {
-
-            importIdentifierArray = importIdentifierArray.map(function (id) { return require(id); });
-        }
-
-        return module.exports = callback.call(thisScope, ...importIdentifierArray);
-    }
-
-    // Browser
-    waitModules();
-
-
-    function waitModules() {
-
-        if (importIdentifierArray.length) {
-
-            for (let i = 0; i < importIdentifierArray.length; i++) {
-
-                if (!thisScope.modules[importIdentifierArray[i]]) { return setTimeout(waitModules, 10); }
-            }
-        }
-
-        callback.call(thisScope, ...importIdentifierArray.map(function (id) { return thisScope.modules[id]; }));
     }
 }

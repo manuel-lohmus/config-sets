@@ -7,14 +7,11 @@ var path = require('path'),
     configFileName = 'config-sets.json',
     scriptName = path.parse(process.argv[1]).base,
     args = arg_options(),
-    configSettings = dataContext.watchJsonFile({
-        filePath: configFileName,
-        data: {
-            isProduction: true,
-            production: {},
-            development: {}
-        },
-        removeUnusedKeys: false
+    isWatchingFile = false,
+    configSettings = dataContext({
+        isProduction: true,
+        production: {},
+        development: {}
     });
 
 if ((args.help || args.help === '') && (scriptName === 'index' || scriptName === 'index.js')) {
@@ -53,15 +50,24 @@ module.exports = Object.defineProperties(configSets, {
         get: function () { return configSettings.development; }
     },
 
-    isSaveChanges: {
+    enableFileReadWrite: {
         configurable: false, enumerable: false,
-        get: function () { return dataContext.isSaveChanges; },
-        set: function (val) { dataContext.isSaveChanges = Boolean(val); }
+        get: function () { return dataContext.enableFileReadWrite; },
+        set: function (val) { dataContext.enableFileReadWrite = Boolean(val); }
     }
 });
 
 
 function configSets(configModuleName, defaultConfigSettings) {
+
+    if (!isWatchingFile) {
+
+        dataContext.watchJsonFile({
+            filePath: configFileName,
+            data: configSettings,
+            removeUnusedKeys: false
+        });
+    }
 
     if (defaultConfigSettings === undefined) {
 

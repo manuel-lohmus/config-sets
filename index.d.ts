@@ -9,5 +9,5 @@ declare module 'config-sets' {
     export const isProduction: boolean;
     export const production: object;
     export const development: object;
-    export const isSaveChanges: boolean;
+    export const enableFileReadWrite: boolean;
 }
