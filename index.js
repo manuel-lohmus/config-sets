@@ -1,4 +1,4 @@
-﻿/**  Copyright (c) 2024, Manuel Lõhmus (MIT License). */
+/**  Copyright (c) 2024, Manuel Lõhmus (MIT License). */
 
 'use strict';
 
@@ -69,10 +69,14 @@ function configSets(configModuleName, defaultConfigSettings) {
         });
     }
 
-    if (defaultConfigSettings === undefined) {
+    if (defaultConfigSettings === undefined && typeof configModuleName === 'object') {
 
         defaultConfigSettings = configModuleName;
         configModuleName = undefined;
+    }
+    else if (defaultConfigSettings === undefined) {
+
+        defaultConfigSettings = {};
     }
 
     if (configModuleName) {
