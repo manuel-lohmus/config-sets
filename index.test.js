@@ -55,8 +55,8 @@ testRunner('TESTS for config-sets', { skip: false }, (test) => {
 
 /**
  * Test runner. Function to run unit tests in the console.
- * @author Manuel Lõhmus (MIT License)
- * @version 1.1.5
+ * @author Manuel Lõhmus 2024 (MIT License)
+ * @version 1.1.4
  * [2024-12-29] adde    d functionality to select tests by ID in the command line arguments (e.g. --testIDs=1 2 3)
  * @example `npm test '--'` or `node index.test.js`
  * @example `npm test '--' --help` or `node index.test.js --help`
@@ -98,9 +98,7 @@ testRunner('TESTS for config-sets', { skip: false }, (test) => {
  */
 function testRunner(runnerName, options, cb) {
 
-    var globalContext = this || globalThis;
-
-    globalContext?.process?.on('uncaughtException', function noop() { });
+    this?.process?.on('uncaughtException', function noop() { });
 
     testRunner.testRunnerOK = true;
     clearTimeout(testRunner.exitTimeoutID);
@@ -128,8 +126,8 @@ The following options are supported:
     --testID   Number of the test to run (e.g. node index.test.js --testID=1 --testID=2 --testID=3)
     `);
 
-        if (globalContext?.process?.argv[1].endsWith(".js")) { exitPressKey(); }
-        else { globalContext?.process?.exit(0); }
+        if (this?.process?.argv[1].endsWith(".js")) { exitPressKey(); }
+        else { process.exit(0); }
 
         return;
     }
@@ -194,7 +192,7 @@ The following options are supported:
 
         //skip
         if (options?.skip || testID && testID.length && !testID.includes(id)) {
-            
+
             log(id, label, "\t", strSKIP);
             testCompleted();
 
@@ -284,42 +282,41 @@ The following options are supported:
                 print_stdout();
             }
 
-            globalContext?.process?.removeAllListeners('uncaughtException');
+            this?.process?.removeAllListeners('uncaughtException');
 
-            if (globalContext?.process?.argv[1].endsWith(".js")) {
+            if (this?.process?.argv[1].endsWith(".js")) {
 
                 exitPressKey();
             }
-            else if (globalContext?.process) {
+            else if (this?.process) {
 
                 if (!testRunnerOK) { testRunner.testRunnerOK = false; }
 
-                testRunner.exitTimeoutID = setTimeout(function (exit) {
-                    
-                    exit(testRunner.testRunnerOK ? 0 : 1);
+                testRunner.exitTimeoutID = setTimeout(function () {
 
-                }, 100, globalContext?.process?.exit);
+                    process.exit(testRunner.testRunnerOK ? 0 : 1);
+                }, 100);
             }
         }
     }
 
     function exitPressKey() {
 
-        globalContext?.process?.stdin.setRawMode(true);
-        globalContext?.process?.stdin.resume();
-        globalContext?.process?.stdin.on('data', globalContext?.process?.exit.bind(globalContext?.process, testRunnerOK ? 0 : 1));
+        process.stdin.setRawMode(true);
+        process.stdin.resume();
+        process.stdin.on('data', process.exit.bind(process, testRunnerOK ? 0 : 1));
 
         console.log('Press any key to exit');
     }
 
     function arg_options() {
 
-        if ("undefined" === typeof globalContext?.process) { return {}; }
+        if ("undefined" === typeof process) { return {}; }
 
         var isKey = false,
             key = '',
             values,
-            args = globalContext?.process?.argv
+            args = process.argv
                 .slice(2)
                 .join('')
                 .split('')
