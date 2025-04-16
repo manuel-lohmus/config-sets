@@ -1,4 +1,4 @@
-﻿/**  Copyright (c) 2024, Manuel Lõhmus (MIT). */
+/**  Copyright (c) Manuel Lõhmus (MIT). */
 
 'use strict';
 
@@ -55,7 +55,7 @@ testRunner('TESTS for config-sets', { skip: false }, (test) => {
 
 /**
  * Test runner. Function to run unit tests in the console.
- * @author Manuel Lõhmus 2024 (MIT License)
+ * @author Manuel Lõhmus (MIT License)
  * @version 1.1.5
  * [2024-12-29] adde    d functionality to select tests by ID in the command line arguments (e.g. --testIDs=1 2 3)
  * @example `npm test '--'` or `node index.test.js`
@@ -98,9 +98,9 @@ testRunner('TESTS for config-sets', { skip: false }, (test) => {
  */
 function testRunner(runnerName, options, cb) {
 
-    var globalScope = this || globalThis;
+    var globalContext = this || globalThis;
 
-    globalScope?.process?.on('uncaughtException', function noop() { });
+    globalContext?.process?.on('uncaughtException', function noop() { });
 
     testRunner.testRunnerOK = true;
     clearTimeout(testRunner.exitTimeoutID);
@@ -128,8 +128,8 @@ The following options are supported:
     --testID   Number of the test to run (e.g. node index.test.js --testID=1 --testID=2 --testID=3)
     `);
 
-        if (globalScope?.process?.argv[1].endsWith(".js")) { exitPressKey(); }
-        else { globalScope?.process?.exit(0); }
+        if (globalContext?.process?.argv[1].endsWith(".js")) { exitPressKey(); }
+        else { globalContext?.process?.exit(0); }
 
         return;
     }
@@ -284,13 +284,13 @@ The following options are supported:
                 print_stdout();
             }
 
-            globalScope?.process?.removeAllListeners('uncaughtException');
+            globalContext?.process?.removeAllListeners('uncaughtException');
 
-            if (globalScope?.process?.argv[1].endsWith(".js")) {
+            if (globalContext?.process?.argv[1].endsWith(".js")) {
 
                 exitPressKey();
             }
-            else if (globalScope?.process) {
+            else if (globalContext?.process) {
 
                 if (!testRunnerOK) { testRunner.testRunnerOK = false; }
 
@@ -298,28 +298,28 @@ The following options are supported:
                     
                     exit(testRunner.testRunnerOK ? 0 : 1);
 
-                }, 100, globalScope?.process?.exit);
+                }, 100, globalContext?.process?.exit);
             }
         }
     }
 
     function exitPressKey() {
 
-        globalScope?.process?.stdin.setRawMode(true);
-        globalScope?.process?.stdin.resume();
-        globalScope?.process?.stdin.on('data', globalScope?.process?.exit.bind(globalScope?.process, testRunnerOK ? 0 : 1));
+        globalContext?.process?.stdin.setRawMode(true);
+        globalContext?.process?.stdin.resume();
+        globalContext?.process?.stdin.on('data', globalContext?.process?.exit.bind(globalContext?.process, testRunnerOK ? 0 : 1));
 
         console.log('Press any key to exit');
     }
 
     function arg_options() {
 
-        if ("undefined" === typeof globalScope?.process) { return {}; }
+        if ("undefined" === typeof globalContext?.process) { return {}; }
 
         var isKey = false,
             key = '',
             values,
-            args = globalScope?.process?.argv
+            args = globalContext?.process?.argv
                 .slice(2)
                 .join('')
                 .split('')
