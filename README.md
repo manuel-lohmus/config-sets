@@ -1,8 +1,10 @@
-﻿<div class="row w-100">
-<div class="col-3 d-none d-lg-inline">
-<div class="sticky-top overflow-auto vh-100">
-<div id="list-headers" class="list-group mt-5">
 
+<div class="row w-100">
+<div class="col-lg-3 d-lg-inline">
+<div class="sticky-top overflow-auto vh-lg-100">
+<div id="list-headers" class="list-group mt-2 ms-lg-2 ms-4">
+
+#### Table of contents
 - [**Config Sets**](#config-sets)
 - [**Installation**](#installation)
 - [**Usage**](#usage)
@@ -20,8 +22,8 @@
 </div>
 </div>
  
-<div class="col">
-<div class="p-2 markdown-body" data-bs-spy="scroll" data-bs-target="#list-headers" data-bs-offset="0" tabindex="0">
+<div class="col-lg-9 mt-2">
+<div class="ps-4 markdown-body" data-bs-spy="scroll" data-bs-target="#list-headers" data-bs-offset="0" tabindex="0">
 
 # Config Sets 
 

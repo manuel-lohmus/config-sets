@@ -69,6 +69,6 @@
   },
   "funding": "https://manuel-lohmus.github.io/config-sets/README.html#license",
   "dependencies": {
-    "data-context": "^2.0.0-beta.18"
+    "data-context": "^2.0.0-beta.19"
   }
 }
