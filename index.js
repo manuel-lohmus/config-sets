@@ -209,6 +209,7 @@ function arg_options() {
 
     function convertValue(val) {
 
+        if (val === '') { return ''; }
         if (val === 'null') { return null; }
         if (val === 'true') { return true; }
         if (val === 'false') { return false; }
