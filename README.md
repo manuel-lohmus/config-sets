@@ -1,11 +1,21 @@
+<div class="row w-100">
+<div class="col-12 text-center">
 
+# Config Sets 
+
+Easy app configure in real time.
+
+This manual is also available in [HTML5](https://manuel-lohmus.github.io/config-sets/README.html).
+
+</div>
+</div> 
 <div class="row w-100">
 <div class="col-lg-3 d-lg-inline">
 <div class="sticky-top overflow-auto vh-lg-100">
 <div id="list-headers" class="list-group mt-2 ms-lg-2 ms-4">
 
 #### Table of contents
-- [**Config Sets**](#config-sets)
+- [**Introduction**](#introduction)
 - [**Installation**](#installation)
 - [**Usage**](#usage)
   - [Basic Usage](#basic-usage)
@@ -25,15 +35,14 @@
 <div class="col-lg-9 mt-2">
 <div class="ps-4 markdown-body" data-bs-spy="scroll" data-bs-target="#list-headers" data-bs-offset="0" tabindex="0">
 
-# Config Sets 
+## Introduction
 
-<!--[![npm-version](https://badgen.net/npm/v/config-sets)](https://www.npmjs.com/package/config-sets)-->
-
-This Node.js module manages configuration settings by reading from and writing to a `config-sets.json` file.<br> 
-It handles command-line arguments and watches for changes to the configuration file.<br> 
-It allows you to create applications that can be configured in real time.<br>
-
-This manual is also available in [HTML5](https://manuel-lohmus.github.io/config-sets/README.html).
+This Node.js module manages configuration settings by reading from and writing to a `config-sets.json` file.
+It handles command-line arguments and watches for changes to the configuration file.
+It allows you to create applications that can be configured in real time.
+This module is part of the ['conextra'](https://www.npmjs.com/package/conextra) framework, 
+which is a simple and easy-to-use single-page application (SPA) framework.
+You have to try it! A different solution than MVC (model–view–controller).
 
 > Please note, this version is not backward compatible with version 2.x<br>
 > Please note that JSON string is not 100% compatible.<br>
@@ -161,7 +170,7 @@ Prints the help message.
 
 This project is licensed under the MIT License.
 
-Copyright &copy; 2025 Manuel Lõhmus
+Copyright &copy; Manuel Lõhmus
 
 [![Donate](https://www.paypalobjects.com/en_US/i/btn/btn_donate_SM.gif)](https://www.paypal.com/donate?hosted_button_id=ESBQQHBB9LVWC)
 
